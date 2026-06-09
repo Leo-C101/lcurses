@@ -366,7 +366,7 @@ public:
         }
     }
 
-    void display() {
+    void display() const {
         std::string output;
         for (int y = 0; y < static_cast<int>(m_Buffer.size()); ++y) {
             Color currFg;
@@ -392,6 +392,20 @@ public:
             }
         }
         output += "\033[0m";
+        std::cout << output << std::flush;
+    }
+
+    void display_no_colors() const {
+        std::string output;
+        output += "\033[0m";
+        for (int y = 0; y < static_cast<int>(m_Buffer.size()); ++y) {
+            for (int x = 0; x < static_cast<int>(m_Buffer[0].size()); ++x) {
+                output += wchar_to_utf8(m_Buffer[y][x].ch);
+            }
+            if (y < static_cast<int>(m_Buffer.size()) - 1) {
+                output += "\n";
+            }
+        }
         std::cout << output << std::flush;
     }
 };
@@ -450,9 +464,14 @@ inline void set_bg_at(int x, int y, Color c) {
     stdscr.set_bg_at(x, y, c);
 }
 
-inline void refresh() {
+inline void refresh(bool colors = false) {
     move_cursor(0, 0);
-    stdscr.display();
+    if (colors) {
+        stdscr.display();
+    }
+    else {
+        stdscr.display_no_colors();
+    }
     stdscr.fill(' ');
     std::cout << std::flush;
 }
