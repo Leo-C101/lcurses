@@ -424,6 +424,10 @@ inline void mvprint(int x, int y, const std::string& str) {
     stdscr.add_str(x, y, str);
 }
 
+inline void mvaddch(int x, int y, char ch) {
+    stdscr.add_str(x, y, std::string(1, ch));
+}
+
 inline void mvprintw(int x, int y, const std::wstring& str) {
     stdscr.add_wstr(x, y, str);
 }
